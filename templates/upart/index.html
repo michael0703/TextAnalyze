@@ -1,0 +1,36 @@
+{% extends '../base.html' %}
+{% load  staticfiles %}
+{% block titleblock %}<title>上傳文章</title>{% endblock %}
+<body>
+    {% block body %}
+    <h1>這裡可以給你上傳文件檔案</h1>
+    <br>
+    <div class="uploadbox">
+        <form action="." method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+                <input style='width: 30%;'type="text" class="form-control" placeholder="輸入文章名稱" id="inputDefault" name="title">
+                <div class="input-group mb-3" style="width: 30%;">
+                  <div class="custom-file">
+                    <input name='upload_file'type="file" class="custom-file-input" id="inputGroupFile02">
+                    <label class="custom-file-label" for="inputGroupFile02">
+                    {% if FileUploadMsg %}
+                        {{FileUploadMsg}}
+                    {% else %}
+                        Please Upload txt file Only
+                    {% endif %}
+                    </label>
+                  </div>
+                </div>
+              </div>
+            <button type="submit" class="btn btn-secondary">Submit</button>
+    </div>
+    <div>
+    <button class="btn btn-secondary btn-lg"><a href="/uploadArticles/uploadimage" style="color: white;">Upload image</a></button>
+    </div>
+    <br>
+    <div>
+    <button class="btn btn-secondary btn-lg"><a href="/uploadArticles/adminarticles" style="color: white;">Admin Your Upload Articles</a></button>
+    </div>
+{% endblock %}
+</body>

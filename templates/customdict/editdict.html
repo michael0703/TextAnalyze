@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% block titleblock %}<title>編輯你的辭典</title>{% endblock %}
+<body>
+	{% block body %}
+	<h3>Hello, {{request.user.username}}<br></h3>
+    <div class="jumbotron" >
+    <h1 class="display-4" style="text-align: left;">
+    {% block h1block %}
+    Your Dictionary    {% endblock %}
+    </h1>
+    {% block Searchblock %}
+    <form class="form-inline my-2 my-lg-0" style="text-align: right;float: right;" method="POST" action=".">
+      {% csrf_token %}
+      <input name='filterstr' class="form-control mr-sm-2" type="text" placeholder="搜尋你的留言">
+      <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+    </form>
+    {% endblock %}
+    <br><hr class="my-4">
+
+    {% block Dictblock %}
+    <ul class="list-group">
+      {% for pd in pds %}
+      <li class="list-group-item d-flex justify-content-between align-items-center" style="height: 90px;"> 
+        <b>{{forloop.counter}}</b><strong class="badge badge-secondary" style="font-size: 120%;">{{pd.DictName}}</strong>
+        <div class="modal-footer">
+	        <form action='/customdictpage/editdict/editmsg/{{pd.pk}}' method="POST">
+	   		  {% csrf_token %}
+	          <input type="text" placeholder="編輯你的留言..." name="editdictionary"/>
+	          <input type="submit" class="btn btn-primary" value="編輯" />
+	          <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="location.href='/customdictpage/editdict/deletemsg/{{pd.pk}}'">刪除</button>
+	        </form>
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+    {% endblock %}
+  	</div>
+    {% block paginator%}
+  	<div>
+        <ul class="pagination">
+        <li class="page-item">
+          <a class='page-link' href="/customdictpage/editdict/?page=1">首頁</a>
+        </li>
+        {% if pds.has_previous %}
+          <li class="page-item">
+            <a class='page-link' href="/customdictpage/editdict/?page={{ pds.previous_page_number }}">上一頁</a>
+          </li>
+        {% endif %}
+
+<!--         {% for num in msgs.paginator.page_range %}
+            {% if msgs.number == num %}
+            <li class="page-item active">
+              <a class="page-link" href="/personaledit/?page={{ num }}">{{ num }}</a>
+            </li>
+            {% else %}
+            <li class="page-item">
+              <a class="page-link" href="/personaledit/?page={{ num }}">{{ num }}</a>
+            </li>
+            {% endif %}
+        {% endfor %} -->
+
+        {% if pds.has_next %}
+            <li class="page-item">
+              <a class="page-link" href="/customdictpage/editdict/?page={{ pds.next_page_number }}">下一頁</a>
+            </li>
+        {% endif %}
+            <li class="page-item">
+              <a class="page-link" href="/customdictpage/editdict/?page={{ pds.paginator.num_pages }}">最後一頁</a>
+            </li>
+         </ul>
+    </div>
+    {% endblock %}
+	{% endblock %}
+</body>

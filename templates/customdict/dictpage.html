@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block titleblock %}<title>自訂辭典</title>{% endblock %}
+<body>
+    {% block body %}
+    <h1>這裡可以給你自訂辭典</h1>
+    {% if request.user.is_authenticated %}  <!-- 檢查使用者是否通過驗證 -->
+        <!-- <h6>哈囉{{name}}～</h6> -->
+        {% if uu.pds.all %}
+
+        {% else %}
+            <p text-align="center">你還沒有自訂任何辭典！</p>
+        {% endif %}
+        <div>
+            <form action='.' method="post">
+                {% csrf_token %}
+                  <textarea name='dictbox' class="form-control" id="exampleTextarea" rows="3" placeholder="輸入自訂辭典..." style="width: 50%;"></textarea>
+                  <br>
+                  <input class="btn btn-secondary" type="submit" value="Submit" id="dictboxcommitbutton">
+                </div>
+            </form>
+        </div>
+        <br>
+        <div class="uploadbox">
+            <form action="." method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-group">
+                    <input style='width: 30%;'type="text" class="form-control" placeholder="輸入你想要的檔名" id="inputDefault" name="title">
+                    <div class="input-group mb-3" style="width: 30%;">
+                      <div class="custom-file">
+                        <input name='upload_file'type="file" class="custom-file-input" id="inputGroupFile02">
+                        <label class="custom-file-label" for="inputGroupFile02">
+                        {% if FileUploadMsg %}
+                            {{FileUploadMsg}}
+                        {% else %}
+                            Please Upload txt file Only
+                        {% endif %}
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                <button type="submit" class="btn btn-secondary">Submit</button>
+        </div>
+        <div>
+        <button class="btn btn-secondary btn-lg"><a href="/customdictpage/editdict" style="color: white;">Edit Your Dictionary</a></button>
+        <button class="btn btn-secondary btn-lg"><a href="/customdictpage/buildset" style="color: white;">Build Yout Dictionary Set</a></button>
+        </div>
+    {% else %}
+        <h3>你尚未登入哦~</h3>
+    {% endif %}
+
+    {% endblock %}
+</body>
+</html>

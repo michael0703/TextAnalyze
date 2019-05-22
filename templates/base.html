@@ -1,12 +1,16 @@
 <!DOCTYPE>
-{% load staticfiles %}
+{% load static %}
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html"; charset="utf-8">
-    <link href="{% static 'css/dictpage.css' %}" rel="stylesheet" type="text/css" />
-    <link href="https://stackpath.bootstrapcdn.com/bootswatch/4.1.3/journal/bootstrap.min.css" rel="stylesheet">
+	<!-- <meta http-equiv="Content-Type" content="text/html"; charset="utf-8"> -->
+  <meta http-equiv="Content-Type" content="text/html"; charset=utf-8" />
+    <!-- <link href="{% static 'css/style.css' %}" rel="stylesheet" type="text/css" /> -->
+    <link href="https://stackpath.bootstrapcdn.com/bootswatch/4.1.3/journal/bootstrap.min.css" rel="stylesheet" >
+    <!-- <link rel="stylesheet" href="{% static 'bootstrapcss/bootstrap.min.css'}" type="text/css">
+    <script type="text/javascript" src="{static 'js/bootstrap.min.js'}"></script> -->
     {% block titleblock %}{% endblock %}
     {% block cssblock %}{% endblock %}
+    {% block script %}{% endblock %}
 </head>
 <body>
 	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -17,18 +21,23 @@
 
   <div class="collapse navbar-collapse" id="navbarColor02">
     <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
+      {% block navbar %}
+      <li class="nav-item">
         <a class="nav-link" href="/admin">Admin<span class="sr-only">點這</span></a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="/customdictpage">Custom Dictionary</a>
+        <a class="nav-link" href="/loginapp/login">Login<span class="sr-only">點這</span></a>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link" href="/uploadArticles">Upload Article</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="/textmine">Text Mining</a>
+        <a class="nav-link" href="/tfidfindex">tf-idf Analyze</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href=#>Upload Article</a>
+        <a class="nav-link" href="/NewsMainpage">News Analyze</a>
       </li>
+      {% endblock %}
     </ul>
   </div>
 </nav>

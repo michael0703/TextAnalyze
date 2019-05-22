@@ -1,0 +1,44 @@
+{% extends '../base.html' %}
+{% block script %}
+<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script> -->
+{% endblock %}
+{% block body %}
+<body>
+  <h3>選擇你想一起分析的文章們</h3>
+  <div><button type="button" class="btn btn-secondary" onclick="add_node()">＋(按加號新增文章)</button></div><br>
+<!--   <form method="post" action="/tfidfindex/tfidf/">
+  {% csrf_token %}
+  
+  </form> -->
+  <form method="POST" action='/tfidfindex/tfidf/' >
+  {% csrf_token %}
+  	<h6>輸入你要分析的文章數量</h6>
+  	<input type='text' id='hidden' name="countvar" value=1 style="width: 20%;" /><br>
+  	<br>
+    <button type="submit" class="btn btn-secondary" data-dismiss="modal">分析，Go!</button>
+    <br>
+    <select id=selectbar name=1 id=1 class="custom-select" style="width: 40%;">
+              <option value="none">選擇文章</option>
+              {% for art in request.user.ArticleFile.all %}
+              <option value={{art.pk}}>{{art.title}}</option>
+              {% endfor %}
+    </select>
+  </form>
+  <script type="text/javascript">
+  		var count=1;
+		function add_node()
+		{
+			document.getElementById("hidden").value = ++count;	
+			var add_node = document.getElementById('selectbar');
+			var nodeFather = add_node.parentNode;
+			var node_clone = add_node.cloneNode();
+			content = add_node.innerHTML;
+			node_clone.removeAttribute('id');
+			node_clone.innerHTML = content;
+			node_clone.id=count;
+			node_clone.name=count;
+			nodeFather.appendChild(node_clone);
+		}
+	</script>
+</body>
+{% endblock %}

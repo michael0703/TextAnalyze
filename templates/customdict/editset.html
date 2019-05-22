@@ -1,0 +1,17 @@
+{% extends '../base.html' %}
+{% block titleblock %}<title>編輯辭典群組</title>{% endblock %}
+<body>
+{% block body %}
+
+	{% for pd in uds.dictset.all %}
+
+		{{pd.DictName}}
+	{% endfor %}
+	
+
+
+
+
+
+{% endblock %}
+</body>

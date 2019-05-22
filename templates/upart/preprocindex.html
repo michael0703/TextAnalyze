@@ -1,0 +1,59 @@
+{% extends './admin.html' %} 
+{% block titleblock %}<title>文章前處理</title>{% endblock %}
+{% block h1block %}選擇要處理文章
+<h6>(已處理可以點文章看結果)</h6>
+{% endblock %}
+{% block Dictblock %}
+    <ul class="list-group">
+      {% for art in arts %}
+      <li class="list-group-item d-flex justify-content-between align-items-center" style="height: 90px;"> 
+        {% if art.hascache %}
+        	<b>{{forloop.counter}}</b><a href="/uploadArticles/showpreprocresult/{{art.pk}}" class="badge badge-secondary" style="font-size: 120%;color: white;">{{art.title}}</a>
+        {% else %}
+        	<b>{{forloop.counter}}</b><a class="badge badge-secondary" style="font-size: 120%;color: white;">{{art.title}}</a>
+        {% endif %}
+        <form method="POST" action='/uploadArticles/procarticle/{{art.pk}}'>
+          {% csrf_token %}
+          <select name="selectbar">
+              <option value="none">選擇你要的斷詞表</option>
+              {% for pds in request.user.DictFile.all %}
+              <option value={{pds.pk}}>{{pds.title}}</option>
+              {% endfor %}
+          </select>
+        <button type="submit" class="btn btn-secondary" data-dismiss="modal">文章斷詞</button>
+        </form>
+
+        <div class="modal-footer">
+	        {% if art.hascache %}
+	        	<span class="badge badge-pill badge-success">已處理</span>
+	        {% else %}
+	        	<span class="badge badge-pill badge-primary">未處理</span>
+	        {% endif %}
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+{% endblock %}
+{% block paginator %}
+<div>
+        <ul class="pagination">
+        <li class="page-item">
+          <a class='page-link' href="/uploadArticles/preprocarticleindex/?page=1">首頁</a>
+        </li>
+        {% if arts.has_previous %}
+          <li class="page-item">
+            <a class='page-link' href="/uploadArticles/preprocarticleindex/?page={{ arts.previous_page_number }}">上一頁</a>
+          </li>
+        {% endif %}
+
+        {% if pds.has_next %}
+            <li class="page-item">
+              <a class="page-link" href="/uploadArticles/preprocarticleindex/?page={{ arts.next_page_number }}">下一頁</a>
+            </li>
+        {% endif %}
+            <li class="page-item">
+              <a class="page-link" href="/uploadArticles/preprocarticleindex/?page={{ arts.paginator.num_pages }}">最後一頁</a>
+            </li>
+         </ul>
+    </div>
+{% endblock %}

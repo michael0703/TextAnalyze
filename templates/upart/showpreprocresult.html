@@ -1,0 +1,317 @@
+<!-- {% for key,value in WordMatrix.items %}
+	{% if value > 10 %}
+	{{key}}:{{value}}
+	{% endif %}
+{% endfor %} -->
+
+<style>
+#chart {
+	width		: 100%;
+	height		: 500px;
+	font-size	: 11px;
+}					
+</style>
+
+
+<script src="https://www.amcharts.com/lib/3/amcharts.js"></script>
+<script src="https://www.amcharts.com/lib/3/serial.js"></script>
+<script src="https://www.amcharts.com/lib/3/plugins/export/export.min.js"></script>
+<link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css" media="all" />
+<script src="https://www.amcharts.com/lib/3/themes/light.js"></script>
+
+
+<script type="text/javascript">
+
+var D = {{ f.cache|safe }} ;
+var data = [];
+var threshhold = document.getElementById('thresh').value;
+for(i in D)
+{	
+	if (D[i] > threshhold ){
+	data.push({"country":i, "visits":D[i]});
+	}
+}
+
+
+var chart = AmCharts.makeChart( "chart", {
+  "type": "serial",
+  "theme": "light",
+  "dataProvider":data,
+  "valueAxes": [ {
+    "gridColor": "#FFFFFF",
+    "gridAlpha": 0.2,
+    "dashLength": 0
+  } ],
+  "gridAboveGraphs": true,
+  "startDuration": 1,
+  "graphs": [ {
+    "balloonText": "[[category]]: <b>[[value]]</b>",
+    "fillAlphas": 0.8,
+    "lineAlpha": 0.8,
+    "type": "column",
+    "valueField": "visits"
+  } ],
+  "chartCursor": {
+    "categoryBalloonEnabled": false,
+    "cursorAlpha": 0,
+    "zoomable": false
+  },
+  "categoryField": "country",
+  "categoryAxis": {
+    "gridPosition": "start",
+    "gridAlpha": 0,
+    "tickPosition": "start",
+    "tickLength": 20
+  },
+  "export": {
+    "enabled": true
+  }
+} );
+function Onchange(){
+
+var val  = document.getElementById('thresh').value;
+document.getElementById('value').innerHTML= val;
+var D = {{ f.cache|safe }} ;
+var data = [];
+var threshhold = document.getElementById('thresh').value;
+for(i in D)
+{	
+	if (D[i] > threshhold ){
+	data.push({"country":i, "visits":D[i]});
+	}
+}
+
+
+var chart = AmCharts.makeChart( "chart", {
+  "type": "serial",
+  "theme": "light",
+  "dataProvider":data,
+  
+  "valueAxes": [ {
+    "gridColor": "#FFFFFF",
+    "gridAlpha": 0.2,
+    "dashLength": 0
+  } ],
+  "gridAboveGraphs": true,
+  "startDuration": 1,
+  "graphs": [ {
+    "balloonText": "[[category]]: <b>[[value]]</b>",
+    "fillAlphas": 0.8,
+    "lineAlpha": 0.8,
+    "type": "column",
+    "valueField": "visits"
+  } ],
+  "chartCursor": {
+    "categoryBalloonEnabled": false,
+    "cursorAlpha": 0,
+    "zoomable": false
+  },
+  "categoryField": "country",
+  "categoryAxis": {
+    "gridPosition": "start",
+    "gridAlpha": 0,
+    "tickPosition": "start",
+    "tickLength": 20
+  },
+  "export": {
+    "enabled": true
+  }
+} );}
+</script>
+<script type="text/javascript">
+	Onchange();
+</script>
+<h4>這邊可以決定顯示多少頻率以上的詞彙。</h4>
+ <input id='thresh' type="range" name="points" min="5" max="130"  onchange="Onchange()"><span id='value'>0</span>
+<!-- <input type="range" id="start" name="volume"
+         min="5" max="100" step="5"> -->
+<div id="chart"></div>
+
+
+
+<!-- 
+<script src="https://d3js.org/d3.v5.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3-cloud/1.2.5/d3.layout.cloud.min.js"></script>
+
+<div id="tag" style="border: 1px solid #eee; height: 320px; width:525px;"></div>
+
+<script>
+    //取得d3顏色
+
+    var fill = d3.scaleOrdinal(d3.schemeCategory10);
+    //文字雲/關鍵字，及字型大小（這邊只放三個）
+    var D = {{ f.NerField |safe }} ;
+    var data = [];
+    for(i in D['Noun'])
+    { 
+      data.push({'text':D['Noun'][i], 'size':10+Math.random()*(-1)});
+    };
+
+    //取得呈現處的寬、高
+    var w = parseInt(d3.select("#tag").style("width"), 10);
+    var h = parseInt(d3.select("#tag").style("height"), 10);
+
+    d3.layout.cloud().size([w, h])
+            .words(data)
+            .padding(2)
+            .rotate(function () {
+                return ~~(Math.random() * 2) * 90;
+            })
+            .rotate(function () {
+                return 0;
+            })
+            .fontSize(function (d) {
+                return d.size;
+            })
+            .on("end", draw)
+            .start();
+
+    function draw(words) {
+        d3.select("#tag").append("svg")
+                .attr("width", w)
+                .attr("height", h)
+                .append("g")
+                .attr("transform", "translate(" + w / 2 + "," + h / 2 + ")")
+                .selectAll("text")
+                .data(words)
+                .enter().append("text")
+                .style("font-size", function (d) {
+                    return d.size + "px";
+                })
+                .style("font-family", "Microsoft JhengHei")
+                .style("cursor", 'pointer')
+                .style("fill", function (d, i) {
+                    return fill(i);
+                })
+                .attr("text-anchor", "middle")
+                .attr("transform", function (d) {
+                    return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+                })
+                .text(function (d) {
+                    return d.text;
+                })
+    }
+</script>
+
+<script>
+    //取得d3顏色
+    
+    var fill = d3.scaleOrdinal(d3.schemeCategory10);
+    //文字雲/關鍵字，及字型大小（這邊只放三個）
+    var D = {{ f.NerField |safe }} ;
+    var data = [];
+    for(i in D['Verb'])
+    { 
+      data.push({'text':D['Verb'][i], 'size':10+Math.random()*(-1)});
+    };
+
+    //取得呈現處的寬、高
+    var w = parseInt(d3.select("#tag").style("width"), 10);
+    var h = parseInt(d3.select("#tag").style("height"), 10);
+
+    d3.layout.cloud().size([w, h])
+            .words(data)
+            .padding(2)
+            .rotate(function () {
+                return ~~(Math.random() * 2) * 90;
+            })
+            .rotate(function () {
+                return 0;
+            })
+            .fontSize(function (d) {
+                return d.size;
+            })
+            .on("end", draw)
+            .start();
+
+    function draw(words) {
+        d3.select("#tag").append("svg")
+                .attr("width", w)
+                .attr("height", h)
+                .append("g")
+                .attr("transform", "translate(" + w / 2 + "," + h / 2 + ")")
+                .selectAll("text")
+                .data(words)
+                .enter().append("text")
+                .style("font-size", function (d) {
+                    return d.size + "px";
+                })
+                .style("font-family", "Microsoft JhengHei")
+                .style("cursor", 'pointer')
+                .style("fill", function (d, i) {
+                    return fill(i);
+                })
+                .attr("text-anchor", "middle")
+                .attr("transform", function (d) {
+                    return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+                })
+                .text(function (d) {
+                    return d.text;
+                })
+    }
+</script> -->
+<!-- 
+<script>
+    //取得d3顏色
+    
+    var fill = d3.scaleOrdinal(d3.schemeCategory10);
+    //文字雲/關鍵字，及字型大小（這邊只放三個）
+    var D = {{ f.NerField |safe }} ;
+    var data = [];
+    for(i in D['adjective'])
+    { 
+      data.push({'text':D['adjective'][i], 'size':10+Math.random()*(-1)});
+    };
+
+    //取得呈現處的寬、高
+    var w = parseInt(d3.select("#tag").style("width"), 10);
+    var h = parseInt(d3.select("#tag").style("height"), 10);
+
+    d3.layout.cloud().size([w, h])
+            .words(data)
+            .padding(2)
+            .rotate(function () {
+                return ~~(Math.random() * 2) * 90;
+            })
+            .rotate(function () {
+                return 0;
+            })
+            .fontSize(function (d) {
+                return d.size;
+            })
+            .on("end", draw)
+            .start();
+
+    function draw(words) {
+        d3.select("#tag").append("svg")
+                .attr("width", w)
+                .attr("height", h)
+                .append("g")
+                .attr("transform", "translate(" + w / 2 + "," + h / 2 + ")")
+                .selectAll("text")
+                .data(words)
+                .enter().append("text")
+                .style("font-size", function (d) {
+                    return d.size + "px";
+                })
+                .style("font-family", "Microsoft JhengHei")
+                .style("cursor", 'pointer')
+                .style("fill", function (d, i) {
+                    return fill(i);
+                })
+                .attr("text-anchor", "middle")
+                .attr("transform", function (d) {
+                    return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+                })
+                .text(function (d) {
+                    return d.text;
+                })
+    }
+</script>
+
+
+
+
+
+
+ -->

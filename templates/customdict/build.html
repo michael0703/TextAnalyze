@@ -1,0 +1,24 @@
+{% extends '../base.html' %}
+{% block titleblock %}<title>將辭典分組</title>{% endblock %}
+<body>
+{% block body %}
+
+	<div class="jumbotron">
+	  <h1 class="display-4">將你的辭典分組吧！</h1>
+	  <hr class="my-4">
+	  <ul class="list-group">
+      {% for file in request.user.DictFile.all %}
+      <li class="list-group-item d-flex justify-content-between align-items-center" style="height: 90px;"> 
+        <b>{{forloop.counter}}</b><strong class="badge badge-secondary" style="font-size: 120%;" >{{file.title}}</strong>
+        <div class="modal-footer">
+	          <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="location.href='/customdictpage/showdictfile/{{file.pk}}'">檢視</button>
+	          <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="location.href='/customdictpage/deletedictfile/{{file.pk}}'">刪除</button>
+        </div>
+      </li>
+      <br>
+      {% endfor %}
+    </ul>
+          <button style='width: 35%; text-align: center; margin: 0 auto;' type="button" class="btn btn-primary btn-block">建立新的分組</button>
+	</div>
+{% endblock %}
+</body>

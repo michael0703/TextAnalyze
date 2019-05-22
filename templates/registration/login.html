@@ -1,0 +1,21 @@
+{% extends '../base.html' %}
+<!DOCTYPE html>
+<html>
+{% load  staticfiles %}
+<head>
+    <title>註冊頁面</title>
+    <link href="{% static 'css/style.css' %}" rel="stylesheet" type="text/css" />
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+</head>
+<body>
+	{% block body %}
+    <form method="POST" name="form1">
+        {% csrf_token %}
+        {{form.as_p}}
+        <button type="submit" class="btn btn-secondary">Submit</button>
+    	<button type="button" class="btn btn-secondary" onclick="location.href='/loginapp/signup'">Sign Up</button>
+    </form>
+    
+    {% endblock %}
+</body>
+</html>

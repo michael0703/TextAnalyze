@@ -1,0 +1,47 @@
+{% extends '../customdict/editdict.html' %}
+{% block titleblock %}<title>管理你上傳的文章</title>{% endblock %}
+{% block h1block %}財經類文章{% endblock %}
+{% block Searchblock %}
+<form class="form-inline my-2 my-lg-0" style="text-align: right;float: right;" method="POST" action=".">
+      {% csrf_token %}
+      <input name='filterstr' class="form-control mr-sm-2" type="text" placeholder="搜尋你的文章">
+      <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+</form>
+{% endblock %}
+{% block Dictblock %}
+    <ul class="list-group">
+      {% for art in arts %}
+      <li class="list-group-item d-flex justify-content-between align-items-center" style="height: 90px;"> 
+        <b>{{forloop.counter}}</b><strong class="badge badge-secondary" style="font-size: 120%;">{{art.title}}</strong>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="location.href='/uploadArticles/showpreprocresult/{{art.pk}}'">看結果</button>
+        	<button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="location.href='/uploadArticles/showarticle/{{art.pk}}'">檢視</button>
+	        <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="location.href='/uploadArticles/deletearticle/{{art.pk}}'">刪除</button>
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+{% endblock %}
+{% block paginator %}
+<div>
+        <ul class="pagination">
+        <li class="page-item">
+          <a class='page-link' href="/uploadArticles/adminarticles/?page=1">首頁</a>
+        </li>
+        {% if arts.has_previous %}
+          <li class="page-item">
+            <a class='page-link' href="/uploadArticles/adminarticles/?page={{ arts.previous_page_number }}">上一頁</a>
+          </li>
+        {% endif %}
+
+        {% if pds.has_next %}
+            <li class="page-item">
+              <a class="page-link" href="/uploadArticles/adminarticles/?page={{ arts.next_page_number }}">下一頁</a>
+            </li>
+        {% endif %}
+            <li class="page-item">
+              <a class="page-link" href="/uploadArticles/adminarticles/?page={{ arts.paginator.num_pages }}">最後一頁</a>
+            </li>
+         </ul>
+    </div>
+{% endblock %}

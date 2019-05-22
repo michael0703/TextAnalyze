@@ -1,0 +1,26 @@
+{% extends '../customdict/editdict.html' %}
+{% block titleblock %}<title>管理你上傳的文章</title>{% endblock %}
+{% block h1block %}上傳圖片{% endblock %}
+{% block Searchblock %}
+    <form class="form-inline my-2 my-lg-0" style="text-align: right;float: right;" method="POST" action="/uploadArticles/uploadimage/procimg">
+      {% csrf_token %}
+      從<input name='startID' class="form-control mr-sm-2" type="text" placeholder="輸入編號..." >號到
+      <input name='endID' class="form-control mr-sm-2" type="text" >號
+      <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+    </form>
+{% endblock %}
+{% block Dictblock %}
+    <ul class="list-group">
+      {% for img in imgs %}
+      <li class="list-group-item d-flex justify-content-between align-items-center" style="height: 60px; width: 60%"> 
+        <b>{{img.pk}}</b><strong class="badge badge-secondary" style="font-size: 120%;">{{img.title}}</strong>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="location.href='{{img.img.url}}'">看圖片</button>
+        	<!-- <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="location.href='/uploadArticles/showarticle/{{art.pk}}'">檢視</button> -->
+	        <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="location.href='/uploadArticles/uploadimage/delete/{{img.pk}}'">刪除</button>
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+{% endblock %}
+

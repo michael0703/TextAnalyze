@@ -1,3 +1,4 @@
+{% extends 'base.html' %}
 <!DOCTYPE html>
 <html>
 {% load  staticfiles %}
@@ -7,18 +8,12 @@
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
 </head>
 <body>
-    <form action="." method="POST" name="form1">
+    {% block body %}
+    <form method="POST" name="form1">
         {% csrf_token %}
-        <div>姓氏：<input type="text" name="lastname" id="lastname"/></div>
-        <div>名字：<input type="text" name="firstname" id="firstname"/></div>
-        <div>帳號：<input type="text" name="username" id="username" /></div>
-        <div>密碼：<input type="password" name="password" id="password" /></div>
-        <div>電子信箱：<input type="text" name="email" id="email" /></div>        
-        <div>
-            <input type="submit" name="button" id="button" value="送出" />
-        </div>
+        {{form.as_p}}
+        <button type="submit" class="btn btn-secondary">Submit</button>
     </form>
-    <span style="color: red">{{message}}</span>
- 
+    {% endblock %}
 </body>
 </html>

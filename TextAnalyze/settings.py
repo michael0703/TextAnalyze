@@ -9,6 +9,10 @@ https://docs.djangoproject.com/en/2.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.1/ref/settings/
 """
+'''
+729760163464-rb42g6d6k61jbtca51rn679p10k781tu.apps.googleusercontent.com
+Z3dvVGKZkqyAn7J64f-aoq8E
+'''
 
 import os
 
@@ -29,6 +33,7 @@ ALLOWED_HOSTS = ['weilogin.herokuapp.com','127.0.0.1','mimir.peculab.org', 'loca
 
 
 
+
 # To use our define user model
 # AUTH_USER_MODEL = 'loginapp.User'
 # Application definition
@@ -42,10 +47,30 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'loginapp',
     'customdict',
-    # 'social_auth',
-    # 'front_end',
     'textmining',
+    'uploadArticle',
+    'tfidfanaylze',
+    'NewsSite',
+
+    ## for Google auth
+    'django.contrib.sites', # new
+    'allauth', # new
+    'allauth.account', # new
+    'allauth.socialaccount', # new
+    'allauth.socialaccount.providers.google', # new
+
 ]
+
+AUTHENTICATION_BACKENDS = (
+    "django.contrib.auth.backends.ModelBackend",
+    "allauth.account.auth_backends.AuthenticationBackend",
+)
+
+SITE_ID = 1
+
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = False
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -70,6 +95,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.media'
             ],
         },
     },
@@ -107,11 +133,15 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+MEDIA_ROOT = os.path.join(BASE_DIR,'UserDir')
+MEDIA_URL = '/upfile/'
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+
+LANGUAGE_CODE = 'zh-TW'
 
 TIME_ZONE = 'Asia/Taipei'
 
@@ -121,10 +151,12 @@ USE_L10N = True
 
 USE_TZ = True
 
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
-
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
         os.path.join(BASE_DIR, 'static'),

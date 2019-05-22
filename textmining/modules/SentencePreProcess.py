@@ -8,7 +8,7 @@ import jieba
 import jieba.analyse
 from optparse import OptionParser
 from pandas import DataFrame, read_csv
-from nltk.tokenize import word_tokenize
+# from nltk.tokenize import word_tokenize
 
 
 # path='../data/'
