@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+<!DOCTYPE html>
+<html>
+{% load  staticfiles %}
+<head>
+    <meta http-equiv="Content-Type" content="text/html"; charset="utf-8">
+    <link href="{% static 'css/dictpage.css' %}" rel="stylesheet" type="text/css" />
+    <link href="https://stackpath.bootstrapcdn.com/bootswatch/4.1.3/journal/bootstrap.min.css" rel="stylesheet">
+    <title>自訂辭典</title>
+</head>
+<body>
+    {% block body %}
+    <h1>這裡可以給你自訂辭典</h1>
+    {% if request.user.is_authenticated %}  <!-- 檢查使用者是否通過驗證 -->
+        <h6>哈囉{{name}}～</h6>
+        {% if uu.pds.all %}
+            <div class='showdict flex-container'>
+                <h6>以下是你的自訂辭典:</h6>
+                {% for pd in uu.pds.all %}
+                <ul class='list-group'>
+                    <span class="badge badge-secondary" style="padding: 10px;">{{pd}}</span>
+                    <br>
+                </ul>
+                {% endfor %}
+            </div> 
+        {% else %}
+            <p text-align="center">你還沒有自訂任何辭典！</p>
+        {% endif %}
+        <div>
+            <form action='.' method="post">
+                {% csrf_token %}
+                <textarea row="10" col="100" class="customdictbox" type="text" id="dictbox" name='dictbox' placeholder="請輸入你想要自訂的辭典"></textarea>
+                <input class="btn btn-link" type="submit" value="送出" id="dictboxcommitbutton">
+            </form>
+        </div>
+        <br>
+        <div class="uploadbox">
+            <form action="." method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input class="btn" type="file" name="upload_file" name="提交文件"><br>
+                <button type="submit" class="btn btn-secondary">送出</button>
+        </div>
+
+    {% else %}
+        <p>你尚未登入哦~</p>
+        <a href="/login/">登入<br></a>
+    {% endif %}
+
+    {% endblock %}
+</body>
+</html>

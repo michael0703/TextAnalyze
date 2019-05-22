@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+<!DOCTYPE html>
+<html>
+{% load  staticfiles %}
+<head>
+    {%block titlepart %}<title>文字探勘首頁</title>{% endblock %}
+</head>
+<body>
+{% block body %}
+<h2 for="text_1">輸入想分析的文章</h2><br>
+<form action='.' method="POST">
+	{% csrf_token %}
+	<p>
+    	<textarea id="text_1" name="article" rows='10', cols='100' placeholder="在這邊輸入...">提醒您，當期帳單現金回饋計算方式為：前一月新增國內、外一般消費金額(註)×適用回饋比，以「入帳日」(即商店請款日)為基準，採單筆計算加總回饋，幣別以新台幣計，遇小數點四捨五入（例如: 2月初計算入帳日為1/1- 1/31的消費金額）。現金回饋入帳金額請至「活存交易明細」或當期「綜合對帳單」查詢</textarea>
+  	</p>
+    	<input type="submit" name="button" id="button" value="送出" />
+</form>
+	{% for article_seg in articles_seg %}
+		<div class='flex-container' >
+			這是你的文章斷詞結果：<br>
+			<p>
+				{% for word in article_seg %}
+				<span class="badge badge-secondary">{{word}}</span>
+				{% endfor %}
+			</p>
+		</div>
+	{% endfor %}
+{% endblock %}
+</body>
+</html>

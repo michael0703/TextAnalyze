@@ -1,0 +1,34 @@
+body{
+	text-align: left;
+	font-size: 100%;
+
+}
+
+form div input{
+	/*background: #65737e;*/
+	/*padding:5px 15px;*/
+	/*background:#ccc;*/
+}
+
+div, p{
+	/*line-height: 24px;*/
+	padding: 5px;
+	/*margin: 100px;*/
+}
+
+a:visited{
+	color: gray;
+}
+
+a:hover{
+	color: red;
+}
+
+.flex-container{
+	display: flex;
+}
+
+.flex-container > * {
+	width: 20%;
+	height: 20px;
+}

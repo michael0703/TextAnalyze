@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+{% load  staticfiles %}
+<head>
+    <title>註冊頁面</title>
+    <link href="{% static 'css/style.css' %}" rel="stylesheet" type="text/css" />
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+</head>
+<body>
+    <form action="." method="POST" name="form1">
+        {% csrf_token %}
+        <div>姓氏：<input type="text" name="lastname" id="lastname"/></div>
+        <div>名字：<input type="text" name="firstname" id="firstname"/></div>
+        <div>帳號：<input type="text" name="username" id="username" /></div>
+        <div>密碼：<input type="password" name="password" id="password" /></div>
+        <div>電子信箱：<input type="text" name="email" id="email" /></div>        
+        <div>
+            <input type="submit" name="button" id="button" value="送出" />
+        </div>
+    </form>
+    <span style="color: red">{{message}}</span>
+ 
+</body>
+</html>
