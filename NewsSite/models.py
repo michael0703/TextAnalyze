@@ -7,6 +7,7 @@ class News(models.Model):
 	timestamp = models.DateField(default=now, editable=True)
 	url = models.TextField(default='')
 	company = models.CharField(max_length=10, blank=False)
+	content = models.TextField(default='')
 	positiveprob = models.FloatField(blank=False)
 
 

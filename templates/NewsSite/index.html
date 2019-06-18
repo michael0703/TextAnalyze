@@ -59,6 +59,16 @@
   </div> 
   <div>
     {% if plotchart == 1%}
+      <div class="container ">
+        <div>正向文章前三名</div>
+        {% for pos in PosTop3 %}
+        <h5>- {{pos.title}}</h5>
+        {% endfor %}
+        <div>負向文章前三名</div>
+        {% for neg in NegTop3 %}
+        <h5>- {{neg.title}}</h5>
+        {% endfor %}
+      </div>
       <h3>情感分析圖</h3>
       <div id="chartdiv2"></div>
     {% endif %}
@@ -81,15 +91,17 @@
 <script src="https://www.amcharts.com/lib/4/core.js"></script>
 <script src="https://www.amcharts.com/lib/4/charts.js"></script>
 <script src="https://www.amcharts.com/lib/4/themes/animated.js"></script>
+<script src="https://d3js.org/d3.v5.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3-cloud/1.2.5/d3.layout.cloud.min.js"></script>
 
 <!-- Chart code -->
 <script>
-var data = []
+var data1 = []
 var dict = {{d|safe}};
 console.log(dict)
 for (key in dict){
   console.log(key+dict[key])
-  data.push({"date":key, "value":dict[key]});
+  data1.push({"date":key, "value":dict[key]});
 }
 am4core.ready(function() {
 
@@ -101,7 +113,7 @@ am4core.useTheme(am4themes_animated);
 var chart = am4core.create("chartdiv", am4charts.XYChart);
 
 // Add data
-chart.data = data;
+chart.data = data1;
 
 // Set input format for the dates
 chart.dateFormatter.inputDateFormat = "yyyy-MM-dd";
@@ -222,5 +234,155 @@ chart.data = data;
 
 }); // end am4core.ready()
 </script>
+
+<style type="text/css">
+#postag{
+width:200px;　//DIV區塊寬度
+line-height:50px;　//DIV區塊高度
+padding:20px;　//DIV區塊內距，參閱：CSS padding 內距。
+border:2px blue solid;　//DIV區塊邊框，參閱：CSS border 邊框設計。
+margin-right:10px;　//靠右外距，參閱：CSS margin 邊界使用介紹範例教學。
+float:left;
+}
+#negtag{
+width:200px;
+line-height:50px;
+padding:20px;
+border:2px green solid;
+float:left;
+}
+</style>
+
+
+
+<div>
+  <h5>正向文章文字雲</h5>
+  <div id="postag" style="border: 1px solid #eee; height: 320px; width:525px;"></div></div>
+
+<div>
+  <h5>負向文章文字雲</h5>
+  <div id="negtag" style="border: 1px solid #eee; height: 320px; width:525px;"></div>
+</div>
+
+<script>
+    //取得d3顏色
+    
+    var fill = d3.scaleOrdinal(d3.schemeCategory10);
+    //文字雲/關鍵字，及字型大小（這邊只放三個）
+    var posdata = [];
+    var posdict = {{PosTermDict | safe}};
+    for (key in posdict){
+      console.log(key+posdict[key])
+      posdata.push({text:key, size:posdict[key]});
+    };
+    //取得呈現處的寬、高
+    var w = parseInt(d3.select("#postag").style("width"), 10);
+    var h = parseInt(d3.select("#postag").style("height"), 10);
+
+    d3.layout.cloud().size([w, h])
+            .words(posdata)
+            .padding(2)
+            .rotate(function () {
+                return ~~(Math.random() * 2) * 90;
+            })
+            .rotate(function () {
+                return 0;
+            })
+            .fontSize(function (d) {
+                return d.size;
+            })
+            .on("end", draw)
+            .start();
+
+    function draw(words) {
+        d3.select("#postag").append("svg")
+                .attr("width", w)
+                .attr("height", h)
+                .append("g")
+                .attr("transform", "translate(" + w / 2 + "," + h / 2 + ")")
+                .selectAll("text")
+                .data(words)
+                .enter().append("text")
+                .style("font-size", function (d) {
+                    return d.size + "px";
+                })
+                .style("font-family", "Microsoft JhengHei")
+                .style("cursor", 'pointer')
+                .style("fill", function (d, i) {
+                    return fill(i);
+                })
+                .attr("text-anchor", "middle")
+                .attr("transform", function (d) {
+                    return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+                })
+                .text(function (d) {
+                    return d.text;
+                })
+                .on("click", function (d) {
+                    window.open("https://www.google.com/search?q=" + d.text, '_blank');
+                });
+    }
+</script>
+
+<script>
+    //取得d3顏色
+    
+    var fill = d3.scaleOrdinal(d3.schemeCategory10);
+    //文字雲/關鍵字，及字型大小（這邊只放三個）
+    var negdata = [];
+    var negdict = {{NegTermDict | safe}};
+    for (key in negdict){
+      console.log(key+negdict[key])
+      negdata.push({text:key, size:negdict[key]});
+    };
+    //取得呈現處的寬、高
+    var w = parseInt(d3.select("#negtag").style("width"), 10);
+    var h = parseInt(d3.select("#postag").style("height"), 10);
+
+    d3.layout.cloud().size([w, h])
+            .words(negdata)
+            .padding(2)
+            .rotate(function () {
+                return ~~(Math.random() * 2) * 90;
+            })
+            .rotate(function () {
+                return 0;
+            })
+            .fontSize(function (d) {
+                return d.size;
+            })
+            .on("end", draw)
+            .start();
+
+    function draw(words) {
+        d3.select("#negtag").append("svg")
+                .attr("width", w)
+                .attr("height", h)
+                .append("g")
+                .attr("transform", "translate(" + w / 2 + "," + h / 2 + ")")
+                .selectAll("text")
+                .data(words)
+                .enter().append("text")
+                .style("font-size", function (d) {
+                    return d.size + "px";
+                })
+                .style("font-family", "Microsoft JhengHei")
+                .style("cursor", 'pointer')
+                .style("fill", function (d, i) {
+                    return fill(i);
+                })
+                .attr("text-anchor", "middle")
+                .attr("transform", function (d) {
+                    return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+                })
+                .text(function (d) {
+                    return d.text;
+                })
+                .on("click", function (d) {
+                    window.open("https://www.google.com/search?q=" + d.text, '_blank');
+                });
+    }
+</script>
+
  </body>
 {% endblock %}
